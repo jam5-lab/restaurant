@@ -7,11 +7,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@600;700&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Tajawal,sans-serif}
+body{font-family:Tajawal,sans-serif;overflow-x:hidden}
 .hero{position:relative;min-height:100vh;display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
 .hero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(10,4,6,.92) 0%,rgba(10,4,6,.25) 55%,rgba(10,4,6,.1) 100%)}
-.content{position:relative;z-index:2;text-align:center;padding:0 20px 50px;width:100%;max-width:800px;color:#fff}
+.content{position:relative;z-index:3;text-align:center;padding:0 20px 50px;width:100%;max-width:800px;color:#fff}
 .badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.5);padding:6px 16px;border-radius:999px;font-size:13px}
 h1{font-family:'Reem Kufi',serif;font-size:clamp(36px,8vw,62px);line-height:1.15;margin:14px 0 8px;text-shadow:0 4px 20px rgba(0,0,0,.6)}
 h1 span{color:#f0b24a}
@@ -22,11 +22,22 @@ p{opacity:.92}
 .btn-profile{background:#c8283c;color:#fff;border:2px solid #fff}
 .btn-sound{background:rgba(255,255,255,.15);color:#fff;border:2px solid rgba(255,255,255,.7);cursor:pointer;font-family:inherit}
 .btn:hover{transform:translateY(-3px)}
+
+/* أوراق تتساقط على طول */
+.leaves{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;display:none}
+.leaves.on{display:block}
+.leaf{position:absolute;top:-40px;opacity:.9;animation:fall linear infinite}
+@keyframes fall{
+  0%{transform:translateY(-40px);opacity:0}
+  10%{opacity:1}
+  100%{transform:translateY(105vh);opacity:.9}
+}
 </style>
 </head>
 <body>
 <header class="hero">
   <img class="bg" src="facade.jpg" alt="Sakura Al Arab">
+  <div class="leaves" id="leaves"></div>
   <div class="content">
     <span class="badge">✦ Saudi x Japanese ✦</span>
     <h1>ساكورا العرب<br><span>Sakura Al Arab</span></h1>
@@ -34,71 +45,77 @@ p{opacity:.92}
     <div class="buttons">
       <a class="btn btn-menu" href="menu.html">🍜 قائمة الأطعمة</a>
       <a class="btn btn-profile" href="profile.html">👤 صفحتنا الشخصية</a>
-      <!-- زر الصوت الجديد -->
-      <button class="btn btn-sound" id="soundBtn" onclick="playSakuraWind()">🌸 تشغيل صوت الساكورا</button>
+      <button class="btn btn-sound" id="soundBtn" onclick="toggleSakura()">🌸 تشغيل صوت الساكورا</button>
     </div>
   </div>
 </header>
 
 <script>
-let audioCtx, isPlaying = false;
+let audioCtx, isPlaying = false, windGain, leavesGain, fallInterval;
 
-function playSakuraWind() {
-  if (isPlaying) return;
+// أوراق أكثر - 35 ورقة
+const leavesBox = document.getElementById('leaves');
+const emojis = ['🌸','🌸','🌸','🍃','🌺'];
+for(let i=0;i<35;i++){
+  let s = document.createElement('div');
+  s.className = 'leaf';
+  s.textContent = emojis[i % emojis.length];
+  s.style.left = Math.random()*100 + '%';
+  s.style.animationDuration = (4 + Math.random()*4) + 's';
+  s.style.animationDelay = (Math.random()*5) + 's';
+  s.style.fontSize = (14 + Math.random()*14) + 'px';
+  leavesBox.appendChild(s);
+}
+
+function toggleSakura(){
+  if(!isPlaying){ playSakuraWind(); }
+  else{ stopSakura(); }
+}
+
+function playSakuraWind(){
   isPlaying = true;
-  document.getElementById('soundBtn').textContent = '🍃 الصوت شغال...';
-
+  document.getElementById('soundBtn').textContent = '🍃 إيقاف الصوت';
+  leavesBox.classList.add('on');
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-  // 1. صوت الرياح: ضجيج ناعم
   const bufferSize = audioCtx.sampleRate * 2;
   const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
   const data = noiseBuffer.getChannelData(0);
-  for (let i = 0; i < bufferSize; i++) {
-    data[i] = Math.random() * 2 - 1;
-  }
-
+  for(let i=0;i<bufferSize;i++){ data[i] = Math.random()*2-1; }
   const windSource = audioCtx.createBufferSource();
-  windSource.buffer = noiseBuffer;
-  windSource.loop = true;
-
+  windSource.buffer = noiseBuffer; windSource.loop = true;
   const windFilter = audioCtx.createBiquadFilter();
-  windFilter.type = 'lowpass';
-  windFilter.frequency.value = 400;
-
-  const windGain = audioCtx.createGain();
-  windGain.gain.value = 0.15;
-
-  const lfo = audioCtx.createOscillator();
-  lfo.frequency.value = 0.1;
-  const lfoGain = audioCtx.createGain();
-  lfoGain.gain.value = 0.08;
-  lfo.connect(lfoGain);
-  lfoGain.connect(windGain.gain);
-  lfo.start();
-
-  windSource.connect(windFilter);
-  windFilter.connect(windGain);
-  windGain.connect(audioCtx.destination);
-  windSource.start();
-
-  // 2. صوت الأوراق: حفيف خفيف
+  windFilter.type = 'lowpass'; windFilter.frequency.value = 300;
+  windGain = audioCtx.createGain(); windGain.gain.value = 0.05;
+  const lfo = audioCtx.createOscillator(); lfo.frequency.value = 0.07;
+  const lfoGain = audioCtx.createGain(); lfoGain.gain.value = 0.02;
+  lfo.connect(lfoGain); lfoGain.connect(windGain.gain); lfo.start();
+  windSource.connect(windFilter); windFilter.connect(windGain); windGain.connect(audioCtx.destination); windSource.start();
   const leavesSource = audioCtx.createBufferSource();
-  leavesSource.buffer = noiseBuffer;
-  leavesSource.loop = true;
-  leavesSource.playbackRate.value = 1.5;
-
+  leavesSource.buffer = noiseBuffer; leavesSource.loop = true; leavesSource.playbackRate.value = 1.2;
   const leavesFilter = audioCtx.createBiquadFilter();
-  leavesFilter.type = 'highpass';
-  leavesFilter.frequency.value = 4000;
-
-  const leavesGain = audioCtx.createGain();
-  leavesGain.gain.value = 0.04;
-
-  leavesSource.connect(leavesFilter);
-  leavesFilter.connect(leavesGain);
-  leavesGain.connect(audioCtx.destination);
-  leavesSource.start();
+  leavesFilter.type = 'highpass'; leavesFilter.frequency.value = 5000;
+  leavesGain = audioCtx.createGain(); leavesGain.gain.value = 0.012;
+  leavesSource.connect(leavesFilter); leavesFilter.connect(leavesGain); leavesGain.connect(audioCtx.destination); leavesSource.start();
+  fallInterval = setInterval(()=>{
+    if(!isPlaying) return;
+    const t = audioCtx.currentTime;
+    const src = audioCtx.createBufferSource(); src.buffer = noiseBuffer;
+    src.playbackRate.value = 2 + Math.random();
+    const f = audioCtx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1800 + Math.random()*1000; f.Q.value = 2;
+    const g = audioCtx.createGain();
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.015, t+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+0.25);
+    src.connect(f); f.connect(g); g.connect(audioCtx.destination);
+    src.start(t); src.stop(t+0.3);
+  }, 1400);
+}
+function stopSakura(){
+  isPlaying = false;
+  document.getElementById('soundBtn').textContent = '🌸 تشغيل صوت الساكورا';
+  leavesBox.classList.remove('on');
+  clearInterval(fallInterval);
+  if(audioCtx) audioCtx.close();
 }
 </script>
 </body>
