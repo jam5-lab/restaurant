@@ -1,19 +1,114 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>قائمة الأطعمة | Sakura Al Arab</title>
-<link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@600&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
-<style>body{font-family:Tajawal,sans-serif;background:#fbf1ea;color:#2a1218;margin:0;padding:20px;text-align:center}h1{font-family:'Reem Kufi',serif;color:#7a1a2b}.grid{max-width:900px;margin:24px auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}.card{background:#fff;border-radius:20px;padding:20px;box-shadow:0 10px 25px rgba(0,0,0,.07)}.card span{font-size:55px}a.back{display:inline-block;margin-top:20px;background:#7a1a2b;color:#fff;padding:10px 24px;border-radius:999px;text-decoration:none}</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Menu | Sakura Al Arab Restaurant</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;overflow:hidden;background:#ff5a1f;transition:background .8s ease}
+a.back{position:absolute;top:16px;left:16px;z-index:20;background:#fff;color:#111;padding:8px 16px;border-radius:999px;text-decoration:none;font-weight:800;font-size:13px}
+.stage{--c1:#ff5a1f;--c2:#e63e00;background:radial-gradient(circle at 50% 35%,var(--c1),var(--c2));transition:.8s;min-height:100vh;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;padding:20px;overflow:hidden}
+.top{position:absolute;top:14px;left:0;right:0;text-align:center;z-index:5}
+.top small{letter-spacing:6px;font-size:12px;opacity:.9}
+.top h1{font-family:'Archivo Black',sans-serif;font-size:clamp(26px,6vw,48px);line-height:.95;text-transform:uppercase}
+.top p{font-size:12px;letter-spacing:2px;opacity:.9;margin-top:4px}
+.top b{background:rgba(0,0,0,.25);padding:2px 10px;border-radius:999px}
+.wheel{position:relative;width:min(92vw,540px);aspect-ratio:1;margin-top:18px}
+.wood{position:absolute;inset:6%;border-radius:50%;background:conic-gradient(from 0deg,#8b5a2b,#c08a4a,#8b5a2b,#6b3f1a,#c08a4a,#8b5a2b);box-shadow:inset 0 0 0 12px #5a3a1a,0 20px 40px rgba(0,0,0,.3);transform:rotate(var(--rot,0deg));transition:transform 1s cubic-bezier(.6,0,.2,1)}
+.ring{position:absolute;inset:0;transform:rotate(var(--rot,0deg));transition:transform 1s cubic-bezier(.6,0,.2,1)}
+.dish{position:absolute;left:50%;top:50%;width:27%;aspect-ratio:1;margin:-13.5% 0 0 -13.5%;border-radius:50%;background:#111;border:6px solid #111;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 12px 28px rgba(0,0,0,.4);transform:rotate(var(--a)) translateY(-168%) rotate(calc(-1 * (var(--a) + var(--rot,0deg))));transition:transform 1s cubic-bezier(.6,0,.2,1),scale .3s}
+.dish span{font-size:clamp(38px,10vw,64px);line-height:1}
+.dish small{font-size:8px;letter-spacing:.5px;background:#fff;color:#111;padding:2px 5px;border-radius:999px;margin-top:2px;font-weight:800;white-space:nowrap}
+.dish.on{scale:1.08;box-shadow:0 0 0 4px #fff,0 16px 30px rgba(0,0,0,.5)}
+.dish:hover{scale:1.08}
+.core{position:absolute;left:50%;top:50%;width:46%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:#111;border:8px solid #111;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 24px 50px rgba(0,0,0,.45);z-index:2}
+.core span{font-size:clamp(70px,18vw,120px);line-height:1}
+.core b{font-size:10px;letter-spacing:1px;background:#fff;color:#111;padding:4px 8px;border-radius:999px;margin-top:4px;white-space:nowrap}
+.pop{animation:pop .6s ease both}
+@keyframes pop{from{transform:translate(-50%,-50%) scale(.8);opacity:.2}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+.bottom{text-align:center;margin-top:8px;z-index:5}
+.bottom h2{font-family:'Archivo Black',sans-serif;font-size:clamp(22px,6vw,36px);text-transform:uppercase;line-height:1}
+.bottom p{font-size:13px;opacity:.95;max-width:420px;margin:6px auto}
+.controls{display:flex;gap:12px;justify-content:center;margin-top:10px}
+.controls button{width:44px;height:44px;border-radius:50%;border:0;background:#fff;color:#111;font-size:20px;cursor:pointer;font-weight:800}
+.egg{position:absolute;font-size:30px}
+.e1{left:12px;top:55%}.e2{right:12px;top:55%}
+.chop{position:absolute;bottom:18px;left:10px;font-size:26px;transform:rotate(-20deg)}
+.chop2{position:absolute;bottom:18px;right:10px;font-size:26px;transform:rotate(20deg) scaleX(-1)}
+</style>
 </head>
 <body>
-<h1>قائمة الأطعمة</h1><p>اختر وجبتك</p>
-<div class="grid">
-<div class="card"><span>🍳</span><h3>فطور - BREAKFAST</h3><p>شكشوكة تاماغو، فول ميسو</p></div>
-<div class="card"><span>🍜</span><h3>غداء - LUNCH</h3><p>مندي رامن، كبسة سوشي</p></div>
-<div class="card"><span>🥩</span><h3>عشاء - DINNER</h3><p>حاشي ترياكي، سليق ساشيمي</p></div>
-<div class="card"><span>🍵</span><h3>قهوة وشاي</h3><p>قهوة عربية ماتشا</p></div>
+<div class="stage" id="stage">
+  <a class="back" href="index.html">← Back</a>
+  <div class="top">
+    <small>— JAPANESE —</small>
+    <h1>SAKURA<br>AL ARAB</h1>
+    <p><b>Saudi x Japanese</b></p>
+  </div>
+
+  <div class="wheel">
+    <div class="wood" id="wood"></div>
+    <div class="ring" id="ring"></div>
+    <div class="core" id="core"></div>
+  </div>
+
+  <div class="bottom">
+    <h2 id="title">LUNCH</h2>
+    <p id="desc">اضغط على أي طبق عشان تدور العجلة</p>
+    <div class="controls">
+      <button onclick="select(cur-1)">‹</button>
+      <button onclick="select(cur+1)">›</button>
+    </div>
+  </div>
+
+  <div class="egg e1">🥚</div><div class="egg e2">🥚</div>
+  <div class="chop">🥢</div><div class="chop2">🥢</div>
 </div>
-<a class="back" href="index.html">↑ ارجع للواجهة</a>
+
+<script>
+const DATA=[
+ {name:"BREAKFAST",emoji:"🍳",desc:"فطور - BREAKFAST",bg1:"#f7c948",bg2:"#d99400",label:"BREAKFAST"},
+ {name:"LUNCH",emoji:"🍜",desc:"غداء - LUNCH",bg1:"#ff6b2c",bg2:"#d92e00",label:"LUNCH"},
+ {name:"DINNER",emoji:"🥩",desc:"عشاء - DINNER",bg1:"#e35a8a",bg2:"#a81a4d",label:"DINNER"},
+ {name:"COFFEE & TEA",emoji:"🍵",desc:"قهوة وشاي - COFFEE & TEA",bg1:"#6bc24a",bg2:"#1e7a2e",label:"COFFEE & TEA"},
+];
+let cur=1, rot=0;
+const ring=document.getElementById("ring"), wood=document.getElementById("wood"), core=document.getElementById("core"), stage=document.getElementById("stage"), title=document.getElementById("title"), desc=document.getElementById("desc");
+
+function render(){
+  ring.innerHTML="";
+  DATA.forEach((d,i)=>{
+    let a=i*(360/DATA.length);
+    let b=document.createElement("button");
+    b.className="dish"+(i===cur?" on":"");
+    b.style.setProperty("--a",a+"deg");
+    b.innerHTML=`<span>${d.emoji}</span><small>${d.label}</small>`;
+    b.onclick=()=>select(i);
+    ring.appendChild(b);
+  });
+}
+function select(i){
+  cur=((i%DATA.length)+DATA.length)%DATA.length;
+  let d=DATA[cur];
+  let step=360/DATA.length;
+  let target=-cur*step;
+  let diff=((target-rot+540)%360)-180;
+  rot+=diff;
+  ring.style.setProperty("--rot",rot+"deg");
+  wood.style.setProperty("--rot",rot+"deg");
+  stage.style.setProperty("--c1",d.bg1);
+  stage.style.setProperty("--c2",d.bg2);
+  document.body.style.background=d.bg1;
+  core.innerHTML=`<span>${d.emoji}</span><b>${d.label}</b>`;
+  core.classList.remove("pop"); void core.offsetWidth; core.classList.add("pop");
+  title.textContent=d.name;
+  desc.textContent=d.desc;
+  render();
+}
+setInterval(()=>select(cur+1),3500);
+render(); select(1);
+</script>
 </body>
 </html>
