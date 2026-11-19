@@ -9,18 +9,19 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Inter,sans-serif;overflow:hidden;background:#f5e6d0;touch-action:pan-y}
 a.back{position:absolute;top:16px;left:16px;z-index:20;background:#fff;color:#111;padding:8px 16px;border-radius:999px;text-decoration:none;font-weight:800;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,.2)}
-.stage{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;padding:20px;overflow:hidden}
-/* الخلفية - الصورة */
+.stage{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;color:#fff;padding:20px;padding-bottom:16px;overflow:hidden}
+/* الخلفية - واضحة */
 .stage::before{content:"";position:absolute;inset:0;background:url('bg.jpg') center/cover no-repeat;z-index:0}
-.stage::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom, rgba(255,255,255,.25), rgba(0,0,0,.15) 45%, rgba(0,0,0,.35));z-index:1}
-/* كل المحتوى فوق الخلفية */
+/* تظليل خفيف جدا بس عشان النص يبان - الخلفية واضحة */
+.stage::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom, rgba(255,255,255,.08), rgba(0,0,0,0) 35%, rgba(0,0,0,.12));z-index:1}
 .stage > *{position:relative;z-index:2}
-.top{position:absolute;top:14px;left:0;right:0;text-align:center;z-index:5;pointer-events:none;text-shadow:0 2px 10px rgba(0,0,0,.4)}
+.top{position:absolute;top:14px;left:0;right:0;text-align:center;z-index:5;pointer-events:none;text-shadow:0 2px 10px rgba(0,0,0,.5)}
 .top small{letter-spacing:6px;font-size:12px;opacity:.95}
 .top h1{font-family:'Archivo Black',sans-serif;font-size:clamp(26px,6vw,48px);line-height:.95;text-transform:uppercase}
 .top p{font-size:12px;letter-spacing:2px;opacity:.95;margin-top:4px}
 .top b{background:rgba(0,0,0,.35);padding:2px 10px;border-radius:999px}
-.wheel{position:relative;width:min(92vw,540px);aspect-ratio:1;margin-top:18px;touch-action:pan-y;cursor:grab}
+/* العجلة نازلة تحت */
+.wheel{position:relative;width:min(88vw,500px);aspect-ratio:1;margin-top:110px;touch-action:pan-y;cursor:grab}
 .wheel:active{cursor:grabbing}
 .wood{position:absolute;inset:6%;border-radius:50%;background:conic-gradient(from 0deg,#8b5a2b,#c08a4a,#8b5a2b,#6b3f1a,#c08a4a,#8b5a2b);box-shadow:inset 0 0 0 12px #5a3a1a,0 20px 40px rgba(0,0,0,.3);transform:rotate(var(--rot,0deg));transition:transform .6s cubic-bezier(.6,0,.2,1)}
 .ring{position:absolute;inset:0;transform:rotate(var(--rot,0deg));transition:transform .6s cubic-bezier(.6,0,.2,1)}
@@ -33,11 +34,11 @@ a.back{position:absolute;top:16px;left:16px;z-index:20;background:#fff;color:#11
 .core b{font-size:10px;letter-spacing:1px;background:#fff;color:#111;padding:4px 8px;border-radius:999px;margin-top:4px;white-space:nowrap}
 .pop{animation:pop .5s ease both}
 @keyframes pop{from{transform:translate(-50%,-50%) scale(.8);opacity:.2}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
-.bottom{text-align:center;margin-top:8px;z-index:5;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+.bottom{text-align:center;margin-top:6px;z-index:5;text-shadow:0 2px 8px rgba(0,0,0,.6)}
 .bottom h2{font-family:'Archivo Black',sans-serif;font-size:clamp(22px,6vw,36px);text-transform:uppercase;line-height:1}
 .bottom p{font-size:13px;opacity:.95;max-width:420px;margin:6px auto}
-.hint{font-size:12px;opacity:.85;margin-top:4px}
-.controls{display:flex;gap:12px;justify-content:center;margin-top:10px}
+.hint{font-size:12px;opacity:.9;margin-top:4px}
+.controls{display:flex;gap:12px;justify-content:center;margin-top:8px}
 .controls button{width:44px;height:44px;border-radius:50%;border:0;background:#fff;color:#111;font-size:20px;cursor:pointer;font-weight:800;box-shadow:0 4px 12px rgba(0,0,0,.3)}
 .egg{position:absolute;font-size:30px;pointer-events:none}
 .e1{left:12px;top:55%}.e2{right:12px;top:55%}
@@ -112,7 +113,6 @@ function select(i){
   render();
 }
 
-// === اللمس فقط - مافي حركة تلقائية ===
 let startX=0, startY=0, isDragging=false;
 wheel.addEventListener("touchstart",e=>{
   startX=e.touches[0].clientX; startY=e.touches[0].clientY; isDragging=true;
