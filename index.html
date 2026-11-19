@@ -4,26 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sakura Al Arab | ساكورا العرب</title>
-<link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@600;700&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Tajawal,sans-serif;overflow-x:hidden}
 .hero{position:relative;min-height:100vh;display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
-.hero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(10,4,6,.92) 0%,rgba(10,4,6,.25) 55%,rgba(10,4,6,.1) 100%)}
-.content{position:relative;z-index:3;text-align:center;padding:0 20px 50px;width:100%;max-width:800px;color:#fff}
-.badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.5);padding:6px 16px;border-radius:999px;font-size:13px}
-h1{font-family:'Reem Kufi',serif;font-size:clamp(36px,8vw,62px);line-height:1.15;margin:14px 0 8px;text-shadow:0 4px 20px rgba(0,0,0,.6)}
-h1 span{color:#f0b24a}
-p{opacity:.92}
-.buttons{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:26px}
-.btn{font-size:17px;font-weight:800;padding:14px 32px;border-radius:999px;min-width:220px;text-decoration:none;text-align:center;transition:.25s;display:inline-block}
+.hero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(10,4,6,.75) 0%,rgba(10,4,6,0) 35%)}
+.content{position:relative;z-index:3;text-align:center;padding:0 20px 32px;width:100%;max-width:800px}
+.buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{font-size:17px;font-weight:800;padding:14px 28px;border-radius:999px;min-width:220px;text-decoration:none;text-align:center;transition:.25s;display:inline-block}
 .btn-menu{background:#fff;color:#2a1218}
 .btn-profile{background:#c8283c;color:#fff;border:2px solid #fff}
-.btn-sound{background:rgba(255,255,255,.15);color:#fff;border:2px solid rgba(255,255,255,.7);cursor:pointer;font-family:inherit}
+.btn-sound{background:rgba(255,255,255,.15);color:#fff;border:2px solid rgba(255,255,255,.7);cursor:pointer;font-family:inherit;backdrop-filter:blur(4px)}
 .btn:hover{transform:translateY(-3px)}
 
-/* أوراق تتساقط على طول */
+/* أوراق تتساقط على طول بدون دوران */
 .leaves{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;display:none}
 .leaves.on{display:block}
 .leaf{position:absolute;top:-40px;opacity:.9;animation:fall linear infinite}
@@ -39,9 +35,6 @@ p{opacity:.92}
   <img class="bg" src="facade.jpg" alt="Sakura Al Arab">
   <div class="leaves" id="leaves"></div>
   <div class="content">
-    <span class="badge">✦ Saudi x Japanese ✦</span>
-    <h1>ساكورا العرب<br><span>Sakura Al Arab</span></h1>
-    <p>نكهة سعودية بروح يابانية</p>
     <div class="buttons">
       <a class="btn btn-menu" href="menu.html">🍜 قائمة الأطعمة</a>
       <a class="btn btn-profile" href="profile.html">👤 صفحتنا الشخصية</a>
@@ -51,9 +44,7 @@ p{opacity:.92}
 </header>
 
 <script>
-let audioCtx, isPlaying = false, windGain, leavesGain, fallInterval;
-
-// أوراق أكثر - 35 ورقة
+let audioCtx, isPlaying = false, fallInterval;
 const leavesBox = document.getElementById('leaves');
 const emojis = ['🌸','🌸','🌸','🍃','🌺'];
 for(let i=0;i<35;i++){
@@ -66,12 +57,9 @@ for(let i=0;i<35;i++){
   s.style.fontSize = (14 + Math.random()*14) + 'px';
   leavesBox.appendChild(s);
 }
-
 function toggleSakura(){
-  if(!isPlaying){ playSakuraWind(); }
-  else{ stopSakura(); }
+  if(!isPlaying){ playSakuraWind(); } else{ stopSakura(); }
 }
-
 function playSakuraWind(){
   isPlaying = true;
   document.getElementById('soundBtn').textContent = '🍃 إيقاف الصوت';
@@ -85,7 +73,7 @@ function playSakuraWind(){
   windSource.buffer = noiseBuffer; windSource.loop = true;
   const windFilter = audioCtx.createBiquadFilter();
   windFilter.type = 'lowpass'; windFilter.frequency.value = 300;
-  windGain = audioCtx.createGain(); windGain.gain.value = 0.05;
+  const windGain = audioCtx.createGain(); windGain.gain.value = 0.05;
   const lfo = audioCtx.createOscillator(); lfo.frequency.value = 0.07;
   const lfoGain = audioCtx.createGain(); lfoGain.gain.value = 0.02;
   lfo.connect(lfoGain); lfoGain.connect(windGain.gain); lfo.start();
@@ -94,7 +82,7 @@ function playSakuraWind(){
   leavesSource.buffer = noiseBuffer; leavesSource.loop = true; leavesSource.playbackRate.value = 1.2;
   const leavesFilter = audioCtx.createBiquadFilter();
   leavesFilter.type = 'highpass'; leavesFilter.frequency.value = 5000;
-  leavesGain = audioCtx.createGain(); leavesGain.gain.value = 0.012;
+  const leavesGain = audioCtx.createGain(); leavesGain.gain.value = 0.012;
   leavesSource.connect(leavesFilter); leavesFilter.connect(leavesGain); leavesGain.connect(audioCtx.destination); leavesSource.start();
   fallInterval = setInterval(()=>{
     if(!isPlaying) return;
