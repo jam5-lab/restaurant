@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sakura Al Arab | ساكورا العرب</title>
+<link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@600;700&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tajawal,sans-serif}
+.hero{position:relative;min-height:100vh;display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
+.hero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(10,4,6,.92) 0%,rgba(10,4,6,.25) 55%,rgba(10,4,6,.1) 100%)}
+.content{position:relative;z-index:2;text-align:center;padding:0 20px 50px;width:100%;max-width:800px;color:#fff}
+.badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.5);padding:6px 16px;border-radius:999px;font-size:13px}
+h1{font-family:'Reem Kufi',serif;font-size:clamp(36px,8vw,62px);line-height:1.15;margin:14px 0 8px;text-shadow:0 4px 20px rgba(0,0,0,.6)}
+h1 span{color:#f0b24a}
+p{opacity:.92}
+.buttons{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.btn{font-size:17px;font-weight:800;padding:14px 32px;border-radius:999px;min-width:220px;text-decoration:none;text-align:center;transition:.25s;display:inline-block}
+.btn-menu{background:#fff;color:#2a1218}
+.btn-profile{background:#c8283c;color:#fff;border:2px solid #fff}
+.btn:hover{transform:translateY(-3px)}
+</style>
+</head>
+<body>
+<header class="hero">
+  <img class="bg" src="facade.jpg" alt="Sakura Al Arab">
+  <div class="content">
+    <span class="badge">✦ Saudi x Japanese ✦</span>
+    <h1>ساكورا العرب<br><span>Sakura Al Arab</span></h1>
+    <p>نكهة سعودية بروح يابانية</p>
+    <div class="buttons">
+      <!-- زر 1 يودي لموقع قائمة الأطعمة -->
+      <a class="btn btn-menu" href="menu.html">🍜 قائمة الأطعمة</a>
+      <!-- زر 2 يودي لموقع الصفحة الشخصية -->
+      <a class="btn btn-profile" href="profile.html">👤 صفحتنا الشخصية</a>
+    </div>
+  </div>
+</header>
+</body>
+</html>
